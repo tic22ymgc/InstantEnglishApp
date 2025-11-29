@@ -1,0 +1,20 @@
+{
+    "name": "Instant English",
+    "short_name": "InstantEng",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#eef2ff",
+    "theme_color": "#4f46e5",
+    "icons": [
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/2014/2014916.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/2014/2014916.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
