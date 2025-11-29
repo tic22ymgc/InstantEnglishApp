@@ -13,7 +13,9 @@ let currentIndex = 0;
 let currentMode = 'question'; // 'question', 'hint', 'answer'
 let isRandom = false;
 let studySeconds = 0;
-let timerInterval;
+let timerInterval = null;
+let questionCount = 0;
+let revealedIndices = new Set();
 
 // DOM Elements
 const japaneseText = document.getElementById('japanese-text');
@@ -31,8 +33,11 @@ const randomOrderCheck = document.getElementById('random-order-check');
 const flashcard = document.getElementById('flashcard');
 const timerDisplay = document.getElementById('study-timer');
 const timerToggleBtn = document.getElementById('timer-toggle-btn');
+const timerResetBtn = document.getElementById('timer-reset-btn');
 const timerIconPlay = document.getElementById('timer-icon-play');
 const timerIconPause = document.getElementById('timer-icon-pause');
+const questionCounterDisplay = document.getElementById('question-counter');
+const counterResetBtn = document.getElementById('counter-reset-btn');
 
 // Initialization
 function init() {
@@ -40,8 +45,10 @@ function init() {
     showCard(currentIndex);
     setupEventListeners();
     startTimer();
+    updateQuestionCounter();
 }
 
+// Timer Logic
 function startTimer() {
     if (timerInterval) clearInterval(timerInterval);
     timerInterval = setInterval(() => {
@@ -55,6 +62,12 @@ function stopTimer() {
     if (timerInterval) clearInterval(timerInterval);
     timerInterval = null;
     updateTimerIcons(false);
+}
+
+function resetTimer() {
+    stopTimer();
+    studySeconds = 0;
+    updateTimerDisplay();
 }
 
 function toggleTimer() {
@@ -81,6 +94,18 @@ function updateTimerDisplay() {
     timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
+// Counter Logic
+function updateQuestionCounter() {
+    if (questionCounterDisplay) {
+        questionCounterDisplay.textContent = questionCount;
+    }
+}
+
+function resetCounter() {
+    questionCount = 0;
+    updateQuestionCounter();
+}
+
 // Data Management
 function loadData() {
     const storedData = localStorage.getItem('instantEnglishData');
@@ -92,7 +117,7 @@ function loadData() {
     // Load Settings
     const storedRandom = localStorage.getItem('instantEnglishRandom');
     isRandom = storedRandom === 'true';
-    randomOrderCheck.checked = isRandom;
+    if (randomOrderCheck) randomOrderCheck.checked = isRandom;
 }
 
 function saveData(csvText) {
@@ -155,7 +180,7 @@ function showCard(index) {
     currentMode = 'question';
     const item = appData[index];
 
-    // Animate Out (Optional, simpler to just swap content for now or add class)
+    // Animate Out
     flashcard.classList.remove('fade-in');
     void flashcard.offsetWidth; // trigger reflow
     flashcard.classList.add('fade-in');
@@ -165,7 +190,10 @@ function showCard(index) {
 
     // Reset Visuals
     englishText.className = 'text-display blur-text';
-    englishText.innerHTML = item.english; // Reset any hint HTML
+    englishText.innerHTML = item.english;
+
+    // Reset Hint State
+    revealedIndices.clear();
 
     // Reset Buttons
     hintBtn.classList.remove('hidden');
@@ -177,15 +205,42 @@ function showHint() {
     currentMode = 'hint';
     const item = appData[currentIndex];
     const words = item.english.split(' ');
+    const totalWords = words.length;
 
-    // Reveal ~50% of words
-    const hintedHtml = words.map(word => {
-        return Math.random() > 0.5 ? word : '<span style="filter: blur(4px); opacity: 0.5;">' + word + '</span>';
+    // Find hidden indices
+    const hiddenIndices = [];
+    for (let i = 0; i < totalWords; i++) {
+        if (!revealedIndices.has(i)) {
+            hiddenIndices.push(i);
+        }
+    }
+
+    // If few words left, just show answer
+    if (hiddenIndices.length <= 2) {
+        showAnswer();
+        return;
+    }
+
+    // Pick 2 random indices to reveal
+    for (let i = 0; i < 2; i++) {
+        if (hiddenIndices.length === 0) break;
+        const randomIndex = Math.floor(Math.random() * hiddenIndices.length);
+        const wordIndex = hiddenIndices[randomIndex];
+        revealedIndices.add(wordIndex);
+        hiddenIndices.splice(randomIndex, 1); // Remove used index
+    }
+
+    // Render text
+    const html = words.map((word, i) => {
+        if (revealedIndices.has(i)) {
+            return word;
+        } else {
+            return `<span style="filter: blur(5px); opacity: 0.6;">${word}</span>`;
+        }
     }).join(' ');
 
-    englishText.innerHTML = hintedHtml;
-    englishText.classList.remove('blur-text'); // Remove full blur
-    // We handle partial blur in the HTML generation above or could use a class
+    englishText.innerHTML = html;
+    englishText.classList.remove('blur-text');
 }
 
 function showAnswer() {
@@ -198,13 +253,15 @@ function showAnswer() {
     hintBtn.classList.add('hidden');
     answerBtn.classList.add('hidden');
     nextBtn.classList.remove('hidden');
+
+    // Increment counter
+    questionCount++;
+    updateQuestionCounter();
 }
 
 function nextCard() {
     if (isRandom) {
-        // Simple random for now (allow repeats)
         let nextIndex = Math.floor(Math.random() * appData.length);
-        // Try to avoid immediate repeat if possible and we have enough data
         if (appData.length > 1 && nextIndex === currentIndex) {
             nextIndex = (nextIndex + 1) % appData.length;
         }
@@ -250,7 +307,6 @@ function setupEventListeners() {
         reader.onload = (event) => {
             csvInput.value = event.target.result;
         };
-        // Default to UTF-8. If user has encoding issues, we might need to handle Shift-JIS.
         reader.readAsText(file);
     });
 
@@ -260,6 +316,8 @@ function setupEventListeners() {
     });
 
     timerToggleBtn.addEventListener('click', toggleTimer);
+    if (timerResetBtn) timerResetBtn.addEventListener('click', resetTimer);
+    if (counterResetBtn) counterResetBtn.addEventListener('click', resetCounter);
 
     // Close modal on outside click
     settingsModal.addEventListener('click', (e) => {

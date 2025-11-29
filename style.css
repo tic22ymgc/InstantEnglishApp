@@ -29,6 +29,7 @@ body {
     background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
     color: var(--text-main);
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -40,146 +41,14 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
-    position: relative;
-}
-
-/* Header */
-.app-header {
-    display: flex;
+    padding: 0.75rem 1.5rem;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.app-header h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    letter-spacing: -0.025em;
-}
-
-.icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: var(--radius-full);
-    color: var(--text-muted);
-    transition: background-color 0.2s;
-}
-
-.icon-btn:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: var(--text-main);
-}
-
-/* Timer */
-.timer-display {
-    font-family: 'Outfit', monospace;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--primary-color);
-    background: rgba(255, 255, 255, 0.5);
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-full);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    min-width: 80px;
-    text-align: center;
-}
-
-/* Main Card */
-.card-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    perspective: 1000px;
-}
-
-.card {
-    width: 100%;
-    background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 1.5rem;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    padding: 2rem;
-    min-height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.text-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-
-.text-display {
-    font-size: 1.5rem;
-    line-height: 1.4;
-    font-weight: 500;
-    color: var(--text-main);
-    min-height: 3rem;
-}
-
-.japanese-group .text-display {
-    font-weight: 700;
-}
-
-.english-group .text-display {
-    font-family: 'Outfit', sans-serif;
-    color: var(--primary-color);
-    transition: filter 0.3s ease, opacity 0.3s ease;
-}
-
-.blur-text {
-    filter: blur(8px);
-    opacity: 0.6;
-    user-select: none;
-}
-
-.partial-blur {
-    filter: blur(4px);
-    opacity: 0.8;
-}
-
-.divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
-    width: 100%;
-}
-
-/* Controls */
-.controls {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1rem;
-    height: 3.5rem;
 }
 
 .btn {
-    flex: 1;
     border: none;
     border-radius: var(--radius-lg);
+    padding: 0.75rem 1.5rem;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -302,4 +171,12 @@ body {
 
 .fade-in {
     animation: fadeIn 0.4s ease forwards;
+}
+
+/* Blur text effect */
+.blur-text {
+    color: transparent !important;
+    text-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    user-select: none;
+    filter: blur(10px);
 }
