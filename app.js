@@ -207,6 +207,24 @@ function showHint() {
     const words = item.english.split(' ');
     const totalWords = words.length;
 
+    // Count how many words are currently revealed
+    const revealedCount = revealedIndices.size;
+
+    // Determine target percentage based on current progress
+    let targetPercentage;
+    if (revealedCount === 0) {
+        targetPercentage = 0.33; // First click: 33%
+    } else if (revealedCount < totalWords * 0.66) {
+        targetPercentage = 0.66; // Second click: 66%
+    } else {
+        // Third click or more: show answer
+        showAnswer();
+        return;
+    }
+
+    // Calculate target number of words to reveal
+    const targetCount = Math.ceil(totalWords * targetPercentage);
+
     // Find hidden indices
     const hiddenIndices = [];
     for (let i = 0; i < totalWords; i++) {
@@ -215,19 +233,13 @@ function showHint() {
         }
     }
 
-    // If few words left, just show answer
-    if (hiddenIndices.length <= 2) {
-        showAnswer();
-        return;
-    }
-
-    // Pick 2 random indices to reveal
-    for (let i = 0; i < 2; i++) {
-        if (hiddenIndices.length === 0) break;
+    // Reveal random words until we reach the target count
+    const wordsToReveal = targetCount - revealedCount;
+    for (let i = 0; i < wordsToReveal && hiddenIndices.length > 0; i++) {
         const randomIndex = Math.floor(Math.random() * hiddenIndices.length);
         const wordIndex = hiddenIndices[randomIndex];
         revealedIndices.add(wordIndex);
-        hiddenIndices.splice(randomIndex, 1); // Remove used index
+        hiddenIndices.splice(randomIndex, 1);
     }
 
     // Render text
