@@ -38,6 +38,7 @@ const timerIconPlay = document.getElementById('timer-icon-play');
 const timerIconPause = document.getElementById('timer-icon-pause');
 const questionCounterDisplay = document.getElementById('question-counter');
 const counterResetBtn = document.getElementById('counter-reset-btn');
+const speakBtn = document.getElementById('speak-btn');
 
 // Initialization
 function init() {
@@ -199,6 +200,7 @@ function showCard(index) {
     hintBtn.classList.remove('hidden');
     answerBtn.classList.remove('hidden');
     nextBtn.classList.add('hidden');
+    speakBtn.classList.add('hidden');
 }
 
 function showHint() {
@@ -265,6 +267,7 @@ function showAnswer() {
     hintBtn.classList.add('hidden');
     answerBtn.classList.add('hidden');
     nextBtn.classList.remove('hidden');
+    speakBtn.classList.remove('hidden'); // Show speak button
 
     // Increment counter
     questionCount++;
@@ -282,6 +285,26 @@ function nextCard() {
         currentIndex = (currentIndex + 1) % appData.length;
     }
     showCard(currentIndex);
+}
+
+// Text-to-Speech Function
+function speakEnglish() {
+    const item = appData[currentIndex];
+    if (!item || !item.english) return;
+
+    // Cancel any ongoing speech
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+    }
+
+    // Create speech synthesis utterance
+    const utterance = new SpeechSynthesisUtterance(item.english);
+    utterance.lang = 'en-US'; // English
+    utterance.rate = 0.9; // Slightly slower for learning
+    utterance.pitch = 1.0;
+
+    // Speak
+    window.speechSynthesis.speak(utterance);
 }
 
 // Event Listeners
@@ -330,6 +353,7 @@ function setupEventListeners() {
     timerToggleBtn.addEventListener('click', toggleTimer);
     if (timerResetBtn) timerResetBtn.addEventListener('click', resetTimer);
     if (counterResetBtn) counterResetBtn.addEventListener('click', resetCounter);
+    if (speakBtn) speakBtn.addEventListener('click', speakEnglish);
 
     // Close modal on outside click
     settingsModal.addEventListener('click', (e) => {
