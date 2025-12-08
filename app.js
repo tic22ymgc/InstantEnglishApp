@@ -39,6 +39,9 @@ const timerIconPause = document.getElementById('timer-icon-pause');
 const questionCounterDisplay = document.getElementById('question-counter');
 const counterResetBtn = document.getElementById('counter-reset-btn');
 const speakBtn = document.getElementById('speak-btn');
+const questionNumberInput = document.getElementById('question-number-input');
+const totalQuestionsDisplay = document.getElementById('total-questions');
+const goBtn = document.getElementById('go-btn');
 
 // Initialization
 function init() {
@@ -201,6 +204,10 @@ function showCard(index) {
     answerBtn.classList.remove('hidden');
     nextBtn.classList.add('hidden');
     speakBtn.classList.add('hidden');
+
+    // Update question number display
+    if (questionNumberInput) questionNumberInput.value = index + 1;
+    if (totalQuestionsDisplay) totalQuestionsDisplay.textContent = appData.length;
 }
 
 function showHint() {
@@ -307,6 +314,24 @@ function speakEnglish() {
     window.speechSynthesis.speak(utterance);
 }
 
+// Go to Question Function
+function goToQuestion() {
+    if (!questionNumberInput) return;
+
+    const inputValue = parseInt(questionNumberInput.value, 10);
+
+    // Validate input
+    if (isNaN(inputValue) || inputValue < 1 || inputValue > appData.length) {
+        alert(`1から${appData.length}の間の番号を入力してください。`);
+        questionNumberInput.value = currentIndex + 1;
+        return;
+    }
+
+    // Jump to the specified question
+    currentIndex = inputValue - 1;
+    showCard(currentIndex);
+}
+
 // Event Listeners
 function setupEventListeners() {
     hintBtn.addEventListener('click', showHint);
@@ -354,6 +379,14 @@ function setupEventListeners() {
     if (timerResetBtn) timerResetBtn.addEventListener('click', resetTimer);
     if (counterResetBtn) counterResetBtn.addEventListener('click', resetCounter);
     if (speakBtn) speakBtn.addEventListener('click', speakEnglish);
+    if (goBtn) goBtn.addEventListener('click', goToQuestion);
+    if (questionNumberInput) {
+        questionNumberInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                goToQuestion();
+            }
+        });
+    }
 
     // Close modal on outside click
     settingsModal.addEventListener('click', (e) => {

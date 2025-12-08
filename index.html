@@ -82,9 +82,28 @@
         </div>
 
         <!-- Flashcard (centered) -->
-        <div style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+        <div
+            style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+
+            <!-- Question Number Navigator (outside flashcard, top-right) -->
+            <div style="width: 100%; display: flex; justify-content: flex-end; margin-bottom: 0.5rem;">
+                <div
+                    style="display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.4rem 0.75rem; border-radius: var(--radius-full); box-shadow: var(--shadow-sm);">
+                    <input type="number" id="question-number-input" min="1" value="1"
+                        style="width: 55px; text-align: center; font-size: 0.95rem; font-weight: 600; padding: 0.15rem; border: 1px solid #e5e7eb; border-radius: 0.4rem; color: var(--primary-color);">
+                    <span style="font-size: 0.95rem; color: var(--text-muted);">/</span>
+                    <span id="total-questions"
+                        style="font-size: 0.95rem; font-weight: 600; color: var(--text-muted);">0</span>
+                    <button id="go-btn" class="btn btn-primary"
+                        style="padding: 0.2rem 0.6rem; font-size: 0.85rem; border-radius: 0.4rem;">
+                        Go
+                    </button>
+                </div>
+            </div>
+
             <div id="flashcard" class="fade-in"
-                style="width: 100%; background: var(--card-bg); border-radius: var(--radius-lg); padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: var(--shadow-lg); backdrop-filter: blur(10px); position: relative; overflow: hidden;">
+                style="width: 100%; min-height: 280px; background: var(--card-bg); border-radius: var(--radius-lg); padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: var(--shadow-lg); backdrop-filter: blur(10px); position: relative; overflow: hidden;">
+
                 <div style="margin-bottom: 2rem; width: 100%;">
                     <p
                         style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
