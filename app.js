@@ -402,5 +402,10 @@ function toggleModal(show) {
     }
 }
 
-// Start
-init();
+// Start - Wait for DOM to be fully loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
