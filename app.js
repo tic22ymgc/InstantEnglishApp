@@ -17,36 +17,48 @@ let timerInterval = null;
 let questionCount = 0;
 let revealedIndices = new Set();
 
-// DOM Elements
-const japaneseText = document.getElementById('japanese-text');
-const englishText = document.getElementById('english-text');
-const hintBtn = document.getElementById('hint-btn');
-const answerBtn = document.getElementById('answer-btn');
-const nextBtn = document.getElementById('next-btn');
-const settingsBtn = document.getElementById('settings-btn');
-const settingsModal = document.getElementById('settings-modal');
-const closeSettingsBtn = document.getElementById('close-settings');
-const saveDataBtn = document.getElementById('save-data-btn');
-const csvInput = document.getElementById('csv-input');
-const csvFileInput = document.getElementById('csv-file');
-const randomOrderCheck = document.getElementById('random-order-check');
-const flashcard = document.getElementById('flashcard');
-const timerDisplay = document.getElementById('study-timer');
-const timerToggleBtn = document.getElementById('timer-toggle-btn');
-const timerResetBtn = document.getElementById('timer-reset-btn');
-const timerIconPlay = document.getElementById('timer-icon-play');
-const timerIconPause = document.getElementById('timer-icon-pause');
-const questionCounterDisplay = document.getElementById('question-counter');
-const counterResetBtn = document.getElementById('counter-reset-btn');
-const speakBtn = document.getElementById('speak-btn');
-const questionNumberInput = document.getElementById('question-number-input');
-const totalQuestionsDisplay = document.getElementById('total-questions');
-const goBtn = document.getElementById('go-btn');
-const prevQuestionBtn = document.getElementById('prev-question-btn');
-const nextQuestionBtn = document.getElementById('next-question-btn');
+// DOM Elements (will be initialized in init())
+let japaneseText, englishText, hintBtn, answerBtn, nextBtn;
+let settingsBtn, settingsModal, closeSettingsBtn, saveDataBtn;
+let csvInput, csvFileInput, randomOrderCheck, flashcard;
+let timerDisplay, timerToggleBtn, timerResetBtn, timerIconPlay, timerIconPause;
+let questionCounterDisplay, counterResetBtn, speakBtn;
+let questionNumberInput, totalQuestionsDisplay, goBtn;
+let prevQuestionBtn, nextQuestionBtn;
+
+// Initialize DOM Elements
+function initDOMElements() {
+    japaneseText = document.getElementById('japanese-text');
+    englishText = document.getElementById('english-text');
+    hintBtn = document.getElementById('hint-btn');
+    answerBtn = document.getElementById('answer-btn');
+    nextBtn = document.getElementById('next-btn');
+    settingsBtn = document.getElementById('settings-btn');
+    settingsModal = document.getElementById('settings-modal');
+    closeSettingsBtn = document.getElementById('close-settings');
+    saveDataBtn = document.getElementById('save-data-btn');
+    csvInput = document.getElementById('csv-input');
+    csvFileInput = document.getElementById('csv-file');
+    randomOrderCheck = document.getElementById('random-order-check');
+    flashcard = document.getElementById('flashcard');
+    timerDisplay = document.getElementById('study-timer');
+    timerToggleBtn = document.getElementById('timer-toggle-btn');
+    timerResetBtn = document.getElementById('timer-reset-btn');
+    timerIconPlay = document.getElementById('timer-icon-play');
+    timerIconPause = document.getElementById('timer-icon-pause');
+    questionCounterDisplay = document.getElementById('question-counter');
+    counterResetBtn = document.getElementById('counter-reset-btn');
+    speakBtn = document.getElementById('speak-btn');
+    questionNumberInput = document.getElementById('question-number-input');
+    totalQuestionsDisplay = document.getElementById('total-questions');
+    goBtn = document.getElementById('go-btn');
+    prevQuestionBtn = document.getElementById('prev-question-btn');
+    nextQuestionBtn = document.getElementById('next-question-btn');
+}
 
 // Initialization
 function init() {
+    initDOMElements();
     loadData();
     showCard(currentIndex);
     setupEventListeners();
