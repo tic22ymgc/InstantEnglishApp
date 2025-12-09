@@ -42,6 +42,8 @@ const speakBtn = document.getElementById('speak-btn');
 const questionNumberInput = document.getElementById('question-number-input');
 const totalQuestionsDisplay = document.getElementById('total-questions');
 const goBtn = document.getElementById('go-btn');
+const prevQuestionBtn = document.getElementById('prev-question-btn');
+const nextQuestionBtn = document.getElementById('next-question-btn');
 
 // Initialization
 function init() {
@@ -294,6 +296,19 @@ function nextCard() {
     showCard(currentIndex);
 }
 
+// Sequential Navigation (always goes to adjacent question, ignoring random mode)
+function prevQuestion() {
+    if (appData.length === 0) return;
+    currentIndex = (currentIndex - 1 + appData.length) % appData.length;
+    showCard(currentIndex);
+}
+
+function nextQuestion() {
+    if (appData.length === 0) return;
+    currentIndex = (currentIndex + 1) % appData.length;
+    showCard(currentIndex);
+}
+
 // Text-to-Speech Function
 function speakEnglish() {
     const item = appData[currentIndex];
@@ -380,6 +395,8 @@ function setupEventListeners() {
     if (counterResetBtn) counterResetBtn.addEventListener('click', resetCounter);
     if (speakBtn) speakBtn.addEventListener('click', speakEnglish);
     if (goBtn) goBtn.addEventListener('click', goToQuestion);
+    if (prevQuestionBtn) prevQuestionBtn.addEventListener('click', prevQuestion);
+    if (nextQuestionBtn) nextQuestionBtn.addEventListener('click', nextQuestion);
     if (questionNumberInput) {
         questionNumberInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
